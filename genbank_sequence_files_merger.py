@@ -1,36 +1,6 @@
 import os
 import sys
 
-def get_name(filename):
-	return ""
-
-def get_voucher_number(filename):
-	# &vDRMDNA2303_&
-	voucher_pattern = "&vDRM"
-	beg_voucher_text_index = filename.find(voucher_pattern)
-
-	if beg_voucher_text_index == -1:
-		return ""
-
-	beg_voucher_text_index += len(voucher_pattern)
-	end_voucher_text_index = filename.find("_&", beg_voucher_text_index)
-	return filename[beg_voucher_text_index : end_voucher_text_index]
-
-def get_genbank_accession_number(filename):
-	# _&aKJ624355_&
-	genbank_pattern = "_&a"
-	beg_genbank_text_index = filename.find(genbank_pattern)
-
-	if beg_genbank_text_index == -1:
-		return ""
-
-	beg_genbank_text_index += len(genbank_pattern)
-	end_genbank_text_index = filename.find("_&", beg_genbank_text_index)
-	return filename[beg_genbank_text_index : end_genbank_text_index]
-
-def get_sequence_type(filename):
-	return "DNA"
-
 def get_sequence(filename):
 	with open(filename, 'r') as f:
 		return f.read().split('\n')[1]
@@ -47,7 +17,7 @@ def main(argv):
 		return
 
 	new_filename = argv[1]
-	file_headers = ["name", "voucher_number", "genbank_accession_number", "sequence_type", "sequence"]
+	file_headers = ["filename", "file_content"]
 	file_content = ""
 
 	for header in file_headers:
@@ -60,12 +30,8 @@ def main(argv):
 			continue
 		
 		print(filename)
-		print("\t" + get_name(filename))
 
-		file_content += get_name(filename) + "\t"
-		file_content += get_voucher_number(filename) + "\t"
-		file_content += get_genbank_accession_number(filename) + "\t"
-		file_content += get_sequence_type(filename) + "\t"
+		file_content += filename + "\t"
 		file_content += get_sequence(filename) + "\t"
 		file_content += "\n"
 
